@@ -64,34 +64,34 @@ func (lex *Lexer) scanToken() {
 	switch ch {
 	case '(':
 		lex.addToken(LEFT_PAREN, nil)
-		break
+
 	case ')':
 		lex.addToken(RIGHT_PAREN, nil)
-		break
+
 	case '{':
 		lex.addToken(LEFT_BRACE, nil)
-		break
+
 	case '}':
 		lex.addToken(RIGHT_BRACE, nil)
-		break
+
 	case ',':
 		lex.addToken(COMMA, nil)
-		break
+
 	case '.':
 		lex.addToken(DOT, nil)
-		break
+
 	case '-':
 		lex.addToken(MINUS, nil)
-		break
+
 	case '+':
 		lex.addToken(PLUS, nil)
-		break
+
 	case ';':
 		lex.addToken(SEMICOLON, nil)
-		break
+
 	case '*':
 		lex.addToken(STAR, nil)
-		break
+
 	case '!':
 		var final TokenKind
 		if lex.match('=') {
@@ -100,7 +100,7 @@ func (lex *Lexer) scanToken() {
 			final = BANG
 		}
 		lex.addToken(final, nil)
-		break
+
 	case '=':
 		var final TokenKind
 		if lex.match('=') {
@@ -109,7 +109,7 @@ func (lex *Lexer) scanToken() {
 			final = EQUAL
 		}
 		lex.addToken(final, nil)
-		break
+
 	case '<':
 		var final TokenKind
 		if lex.match('=') {
@@ -118,7 +118,7 @@ func (lex *Lexer) scanToken() {
 			final = LESS
 		}
 		lex.addToken(final, nil)
-		break
+
 	case '>':
 		var final TokenKind
 		if lex.match('=') {
@@ -127,7 +127,7 @@ func (lex *Lexer) scanToken() {
 			final = GREATER
 		}
 		lex.addToken(final, nil)
-		break
+
 	}
 }
 
