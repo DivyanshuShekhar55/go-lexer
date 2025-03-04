@@ -128,6 +128,23 @@ func (lex *Lexer) scanToken() {
 		}
 		lex.addToken(final, nil)
 
+	case ' ':
+	case '\r':
+	case '\t':
+		// Ignore whitespace
+	case '\n':
+		lex.line++
+
+	case '/':
+		// it may be a comment or div symbol, if comment ignore entire comment
+		if lex.match('/') {
+			for lex.peek() != '\n' && !lex.isAtEnd() {
+				lex.advance()
+			}
+		} else {
+			lex.addToken(SLASH, nil)
+		}
+
 	}
 }
 
@@ -142,4 +159,12 @@ func (lex *Lexer) match(expected byte) bool {
 	// matches case ... the true case
 	lex.advance()
 	return true
+}
+
+// looks at curr char
+func (lex *Lexer) peek() byte {
+	if lex.isAtEnd() {
+		return '\x00'
+	}
+	return lex.charAt(lex.curr)
 }
