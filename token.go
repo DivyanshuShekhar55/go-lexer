@@ -1,4 +1,4 @@
-package main 
+package main
 
 type TokenKind int
 
@@ -11,8 +11,8 @@ const (
 	LEFT_BRACE
 	RIGHT_BRACE
 	COMMA
-	DOT 
-	MINUS 
+	DOT
+	MINUS
 	PLUS
 	SEMICOLON
 	SLASH
@@ -44,15 +44,31 @@ const (
 	IF
 	NIL
 	OR
-  	PRINT
-  	RETURN
+	PRINT
+	RETURN
 	SUPER
-	THIS 
+	THIS
 	TRUE
 	VAR
 	WHILE
 
 	// end of file
-  	EOF
-
+	EOF
 )
+
+type Token struct {
+	tokenType TokenKind
+	lexeme    string
+	literal   interface{} // can hold any type
+	line      int
+}
+
+func newToken(tokenType TokenKind, lexeme string, literal interface{}, line int) Token {
+
+	return Token{
+		tokenType: tokenType,
+		lexeme:    lexeme,
+		literal:   literal,
+		line:      line,
+	}
+}
