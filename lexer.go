@@ -92,6 +92,54 @@ func (lex *Lexer) scanToken() {
 	case '*':
 		lex.addToken(STAR, nil)
 		break
-
+	case '!':
+		var final TokenKind
+		if lex.match('=') {
+			final = BANG_EQUAL
+		} else {
+			final = BANG
+		}
+		lex.addToken(final, nil)
+		break
+	case '=':
+		var final TokenKind
+		if lex.match('=') {
+			final = EQUAL_EQUAL
+		} else {
+			final = EQUAL
+		}
+		lex.addToken(final, nil)
+		break
+	case '<':
+		var final TokenKind
+		if lex.match('=') {
+			final = LESS_EQUAL
+		} else {
+			final = LESS
+		}
+		lex.addToken(final, nil)
+		break
+	case '>':
+		var final TokenKind
+		if lex.match('=') {
+			final = GREATER_EQUAL
+		} else {
+			final = GREATER
+		}
+		lex.addToken(final, nil)
+		break
 	}
+}
+
+func (lex *Lexer) match(expected byte) bool {
+	if lex.isAtEnd() {
+		return false
+	}
+	if lex.charAt(lex.curr+1) != expected {
+		return false
+	}
+
+	// matches case ... the true case
+	lex.advance()
+	return true
 }
