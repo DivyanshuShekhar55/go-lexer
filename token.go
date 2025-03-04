@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type TokenKind int
 
 const (
@@ -71,4 +73,8 @@ func newToken(tokenType TokenKind, lexeme string, literal interface{}, line int)
 		literal:   literal,
 		line:      line,
 	}
+}
+
+func (t *Token) toString() string {
+	return fmt.Sprintf("%s %s %s",t.tokenType, t.lexeme, t.literal)
 }
