@@ -50,7 +50,7 @@ func Tokenise(source string) []Token {
 	for !lex.isAtEnd() {
 		//lex.advance()
 		lex.start = lex.curr
-		//lex.scanToken()
+		lex.scanToken()
 
 	}
 
