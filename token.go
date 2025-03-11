@@ -56,6 +56,9 @@ const (
 
 	// end of file
 	EOF
+
+	// for general errors where unexpected tokens are provided
+	UNKNOWN
 )
 
 type Token struct {
