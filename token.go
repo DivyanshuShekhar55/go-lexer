@@ -79,5 +79,24 @@ func newToken(tokenType TokenKind, lexeme string, literal interface{}, line int)
 }
 
 func (t *Token) toString() string {
-	return fmt.Sprintf("%s %s %s",t.tokenType, t.lexeme, t.literal)
+	return fmt.Sprintf("%s %s %s", t.tokenType, t.lexeme, t.literal)
+}
+
+var keywords = map[string]TokenKind{
+	"and":    AND,
+	"class":  CLASS,
+	"else":   ELSE,
+	"false":  FALSE,
+	"for":    FOR,
+	"fun":    FUN,
+	"if":     IF,
+	"nil":    NIL,
+	"or":     OR,
+	"print":  PRINT,
+	"return": RETURN,
+	"super":  SUPER,
+	"this":   THIS,
+	"true":   TRUE,
+	"var":    VAR,
+	"while":  WHILE,
 }
