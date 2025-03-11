@@ -156,8 +156,12 @@ func (lex *Lexer) scanToken() {
 		// check for each character individually, couldn't have used a simple function
 		if isDigit(ch) {
 			lex.number()
+		} else if isAlpha(ch) {
+			// checks if first char is underscore or alphabet
+			// if yes scan the entire identifier/reserved word using maximal munch rule
+			lex.identifier()
 		} else {
-			newErr(lex.line, UNKNOWN, "Unexpected Token ")
+			newErr(lex.line, UNKNOWN, "Unexpected Token")
 		}
 
 	}
@@ -221,7 +225,7 @@ func (lex *Lexer) number() {
 	}
 
 	// if a decimal point ...
-	if lex.peek() == '.' && isDigit(lex.peekNext() ){
+	if lex.peek() == '.' && isDigit(lex.peekNext()) {
 		// consume the decimal point too
 		lex.advance()
 	}
@@ -232,15 +236,38 @@ func (lex *Lexer) number() {
 	}
 
 	// number over, add from start(inclusive) to curr (exclusive)
-	lex.addToken(NUMBER, lex.source[lex.start: lex.curr])
+	lex.addToken(NUMBER, lex.source[lex.start:lex.curr])
 }
 
-func (lex *Lexer) peekNext()byte{
-	if lex.curr + 1 >= len(lex.source) {
+func (lex *Lexer) peekNext() byte {
+	if lex.curr+1 >= len(lex.source) {
 		return '\x00'
 		// return the null char '\0'
 	}
 
 	// don't increment the curr, just check what's ahead
-	return lex.charAt(lex.curr+1)
+	return lex.charAt(lex.curr + 1)
+}
+
+func (lex *Lexer) identifier() {
+	for isAlphaNumeric(lex.peek()) {
+		lex.advance()
+	}
+	text := lex.source[lex.start:lex.curr]
+	val, exists := keywords[text]
+	if !exists {
+		lex.addToken(IDENTIFIER, text)
+	} else {
+		lex.addToken(val, val)
+	}
+}
+
+func isAlpha(c byte) bool {
+	return (c >= 'a' && c <= 'z') ||
+		(c >= 'A' && c <= 'Z') ||
+		(c == '_')
+}
+
+func isAlphaNumeric(ch byte) bool {
+	return isAlpha(ch) || isDigit(ch)
 }
