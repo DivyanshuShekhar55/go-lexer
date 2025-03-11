@@ -1,4 +1,4 @@
-package main
+package lexer
 
 // we need col and row of current token to scan it
 // row = line and col = (start, curr)
