@@ -25,9 +25,12 @@ func (lex *Lexer) addToken(tokenType TokenKind, literal interface{}) {
 	lex.tokens = append(lex.tokens, token)
 }
 
-// move the curr pointer
-func (lex *Lexer) advance() {
+// returns curr char then moves ahead the curr pointer
+func (lex *Lexer) advance() byte {
+	ch :=  lex.charAt(lex.curr)
 	lex.curr++
+	return ch
+
 }
 
 // check what char is at a given position in the source file
@@ -58,8 +61,8 @@ func Tokenise(source string) []Token {
 }
 
 func (lex *Lexer) scanToken() {
-	lex.advance()
-	ch := lex.charAt(lex.curr)
+	ch := lex.advance()
+	// remember ch is the last char before moving
 
 	switch ch {
 	case '(':
@@ -167,4 +170,26 @@ func (lex *Lexer) peek() byte {
 		return '\x00'
 	}
 	return lex.charAt(lex.curr)
+}
+
+func (lex *Lexer) scanString(){
+	// start is currently at '"', move the curr till we get another '"'
+	for lex.peek() != '"' && !lex.isAtEnd(){
+		if lex.peek() == '\n' {
+			lex.line++
+		}
+		lex.advance()
+	} 
+
+	// say we reached EOF but no '"' was found, return error
+	if lex.isAtEnd() {
+		newErr(lex.line, STRING, "unterminated string found")
+		return 
+	}
+
+	// no error, and curr is at the closing '"'
+
+	// for value just terminate the starting and ending '"'
+	value := lex.source[lex.start+1 : lex.curr-1]
+	lex.addToken(STRING, value)
 }
