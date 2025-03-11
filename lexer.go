@@ -151,6 +151,15 @@ func (lex *Lexer) scanToken() {
 	case '"':
 		lex.scanString()
 
+	default:
+		// we add number matching in default, otherwise we would have to...
+		// check for each character individually, couldn't have used a simple function
+		if isDigit(ch) {
+			lex.number()
+		} else {
+			newErr(lex.line, UNKNOWN, "Unexpected Token ")
+		}
+
 	}
 }
 
@@ -198,4 +207,40 @@ func (lex *Lexer) scanString() {
 	// remember the last index in following is exclusive (so lex.curr-1 gives till curr-2 value)
 	value := lex.source[lex.start+1 : lex.curr-1]
 	lex.addToken(STRING, value)
+}
+
+func isDigit(ch byte) bool {
+	return ch >= '0' && ch <= '9'
+}
+
+func (lex *Lexer) number() {
+
+	// move while digits
+	for isDigit(lex.peek()) {
+		lex.advance()
+	}
+
+	// if a decimal point ...
+	if lex.peek() == '.' && isDigit(lex.peekNext() ){
+		// consume the decimal point too
+		lex.advance()
+	}
+
+	// move till fractional points ...
+	for isDigit(lex.peek()) {
+		lex.advance()
+	}
+
+	// number over, add from start(inclusive) to curr (exclusive)
+	lex.addToken(NUMBER, lex.source[lex.start: lex.curr])
+}
+
+func (lex *Lexer) peekNext()byte{
+	if lex.curr + 1 >= len(lex.source) {
+		return '\x00'
+		// return the null char '\0'
+	}
+
+	// don't increment the curr, just check what's ahead
+	return lex.charAt(lex.curr+1)
 }
